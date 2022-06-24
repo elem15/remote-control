@@ -4,6 +4,7 @@ import { httpServer } from './http_server/index.js';
 import mouseMove from './assets/mouse-move.js';
 import drawSquare from './assets/draw-square.js';
 import drawRectangle from './assets/draw-rectangle.js';
+import drawCircle from './assets/draw-circle.js';
 var HTTP_PORT = 3000;
 console.log("Start static http server on the ".concat(HTTP_PORT, " port!"));
 httpServer.listen(HTTP_PORT);
@@ -29,6 +30,9 @@ wss.on('connection', function connection(ws) {
                         break;
                     case 'rectangle':
                         drawRectangle(width, height, x, y);
+                        break;
+                    case 'circle':
+                        drawCircle(width, x, y);
                         break;
                 }
                 break;

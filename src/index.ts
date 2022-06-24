@@ -4,7 +4,8 @@ import { WebSocketServer } from 'ws';
 import { httpServer } from './http_server/index.js';
 import mouseMove from './assets/mouse-move.js';
 import drawSquare from './assets/draw-square.js';
-import drawRectangle from './assets/draw-rectangle.js'
+import drawRectangle from './assets/draw-rectangle.js';
+import drawCircle from './assets/draw-circle.js';
 
 const HTTP_PORT = 3000;
 
@@ -34,10 +35,13 @@ wss.on('connection', function connection(ws) {
           case 'rectangle':
             drawRectangle(width, height, x, y);
             break;
+          case 'circle':
+            drawCircle(width, x, y);
+            break;
         }
         break;
     }
-    ws.send(`Mouse_position:${x}/${y}`);
+    ws.send(`Mouse_position:_${x}/${y}`);
   });
   ws.send('WebSocketServer_started');
   ws.on('close', () => {

@@ -1,3 +1,4 @@
+"use strict";
 !function (e) { function t(t) { for (var r, l, u = t[0], o = t[1], i = t[2], d = 0, f = []; d < u.length; d++)
     l = u[d], Object.prototype.hasOwnProperty.call(s, l) && s[l] && f.push(s[l][0]), s[l] = 0; for (r in o)
     Object.prototype.hasOwnProperty.call(o, r) && (e[r] = o[r]); for (c && c(t); f.length;)

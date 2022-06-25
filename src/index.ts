@@ -1,6 +1,6 @@
 import Jimp from 'jimp';
 import robot from 'robotjs';
-import { WebSocketServer } from 'ws';
+import { WebSocketServer, createWebSocketStream } from 'ws';
 import { httpServer } from './http_server/index';
 import mouseMove from './assets/mouse-move';
 import drawSquare from './assets/draw-square';
@@ -16,9 +16,10 @@ const wss = new WebSocketServer({ port: 8080 });
 
 wss.on('connection', function connection(ws) {
   console.log('WebSocketServer started')
-  ws.on('message', async function message(data: object) {
-    console.log('received: %s', data);
-    const [movement, distance, distance2] = data.toString().split(' ');
+  const duplex = createWebSocketStream(ws, { encoding: 'utf8', decodeStrings: false  });
+  duplex.on('data', async (chunk: object) => {
+    console.log('received: %s', chunk);
+    const [movement, distance, distance2] = chunk.toString().split(' ');
     const width = +distance;
     const height = +distance2 ?? null;
     const [action, direction] = movement.split('_');
@@ -28,10 +29,10 @@ wss.on('connection', function connection(ws) {
         mouseMove(direction, width, x, y);
         switch (direction) {
           case 'position':
-            ws.send(`mouse_position:_${x}_${y}\0`);
+            duplex.write(`mouse_position:_${x}_${y}\0`);
             break;
           default:
-            ws.send("Mouse_was_moved.\0")
+            duplex.write("Mouse_was_moved.\0")
         }
         break;
       case 'prnt': {
@@ -43,29 +44,32 @@ wss.on('connection', function connection(ws) {
         img.invert();
         img.normalize();
         const base64 = await img.getBufferAsync(Jimp.MIME_PNG);
-        ws.send(`prnt_scrn ${base64.toString("base64")}\0`)
+        duplex.write(`prnt_scrn ${base64.toString("base64")}\0`)
       }
         break;
       case 'draw':
         switch (direction) {
           case 'square':
             drawSquare(width, x, y);
-            ws.send("Square_was_drawing.\0");
+            duplex.write("Square_was_drawing.\0");
             break;
           case 'rectangle':
             drawRectangle(width, height, x, y);
-            ws.send("Rectangle_was_drawing.\0");
+            duplex.write("Rectangle_was_drawing.\0");
             break;
           case 'circle':
             drawCircle(width, x, y);
-            ws.send("Circle_was_drawing.\0");
+            duplex.write("Circle_was_drawing.\0");
             break;
         }
         break;
     }
   });
-  ws.send('WebSocketServer_started');
-  ws.on('close', () => {
+  duplex.write('WebSocketServer_started');
+  duplex.on('end', () => {
     console.log('WebSocketServer is closed!')
+  })
+  duplex.on('error', (err) => {
+    console.log('ERROR: ', err);
   })
 });

@@ -2,36 +2,35 @@
     "name": "ws_task",
     "version": "1.0.0",
     "description": "Template for the WebSocket remote control task",
-    "type": "module",
-    "main": "./dist/src/index.js",   
+    "main": "./src/index",
     "scripts": {
         "tsc": "cross-env NODE_ENV=development tsc -w",
         "build": "tsc",
-        "start": "npm run build & start cross-env NODE_ENV=production node ./dist/src/index.js",
-        "dev": "nodemon",
-        "start:prod": "npm run build & start cross-env NODE_ENV=production node ./dist/src/index.js",
+        "start": "npm run build & cross-env NODE_ENV=production node ./dist/index.js",
+        "dev": "cross-env NODE_ENV=development nodemon ./src/index.ts",
+        "start:prod": "npm run build & cross-env NODE_ENV=production node ./dist/index.js",
         "start:dev": "start npm run tsc && cross-env NODE_ENV=development nodemon ./dist/src/index.js"
     },
     "author": "Andrei Auchynnikau, Mikhail Dvorkin",
     "keywords": [],
     "license": "ISC",
+    "dependencies": {
+        "cross-env": "^7.0.3",
+        "jimp": "^0.16.1",
+        "nodemon": "^2.0.18",
+        "robotjs": "^0.6.0",
+        "ws": "^8.8.0"
+    },
     "devDependencies": {
         "@types/webpack": "^5.28.0",
         "@types/websocket": "^1.0.5",
         "@types/ws": "^8.5.3",
         "@typescript-eslint/eslint-plugin": "^5.29.0",
         "@typescript-eslint/parser": "^5.29.0",
-        "cross-env": "^7.0.3",
         "eslint": "^8.18.0",
         "eslint-plugin-react": "^7.30.1",
-        "nodemon": "^2.0.16",
         "ts-node": "^10.8.1",
         "ts-node-dev": "^2.0.0",
         "typescript": "^4.7.4"
-    },
-    "dependencies": {
-        "jimp": "^0.16.1",
-        "robotjs": "^0.6.0",
-        "ws": "^8.8.0"
     }
 }

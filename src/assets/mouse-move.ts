@@ -13,7 +13,7 @@ export default (direction: string, distance: number, x: number, y: number) => {
       break;
     case 'right':
       robot.dragMouse(x + distance, y);
-      break;
+      break; 
     default: 
       robot.dragMouse(x,y)
   }
